@@ -3544,6 +3544,167 @@
   }
 </style>
 
+
+<style id="post-vercel-mobile-fixes">
+  /* smoother contextual input reveal */
+  .contextual-input{
+    transform-origin:top center !important;
+    filter:blur(2px);
+    clip-path:inset(0 0 100% 0 round 20px);
+    transition:
+      max-height .46s cubic-bezier(.22,.8,.2,1),
+      opacity .34s ease,
+      transform .46s cubic-bezier(.22,.8,.2,1),
+      margin-top .46s cubic-bezier(.22,.8,.2,1),
+      filter .34s ease,
+      clip-path .46s cubic-bezier(.22,.8,.2,1) !important;
+  }
+  .contextual-input.show{
+    clip-path:inset(0 round 20px);
+    filter:blur(0);
+    margin-top:10px !important;
+    max-height:118px !important;
+    opacity:1 !important;
+    transform:translateY(0) scale(1) !important;
+  }
+
+  /* homepage retreat feels absorbed, not just hidden */
+  .hero-home.home-transitioning .home-question,
+  .hero-home.home-transitioning #moodGrid,
+  .hero-home.home-transitioning #textAreaWrap,
+  .hero-home.home-transitioning .home-begin-wrap{
+    opacity:0 !important;
+    transform:translateY(16px) scale(.985) !important;
+    filter:blur(6px) !important;
+    pointer-events:none !important;
+    transition:
+      opacity .44s ease,
+      transform .56s cubic-bezier(.2,.8,.2,1),
+      filter .44s ease !important;
+  }
+  .hero-home.home-transitioning .chips .chip:not(.absorbing){
+    opacity:0 !important;
+    transform:translateY(-14px) scale(.9) !important;
+    filter:blur(8px) !important;
+    transition:
+      opacity .56s ease,
+      transform .66s cubic-bezier(.18,.82,.24,1),
+      filter .56s ease !important;
+  }
+  .hero-home.home-transitioning .eye-wrap{
+    opacity:.96 !important;
+    transform:scale(1.015) !important;
+    transition:opacity .44s ease, transform .58s ease !important;
+  }
+
+  /* centered prelude with ritual eye and breath */
+  #preludePanel{
+    text-align:center !important;
+    width:min(408px, 92vw) !important;
+    margin:0 auto !important;
+    padding:18px 10px 14px !important;
+  }
+  .ritual-eye-wrap{
+    width:136px;
+    margin:2px auto 12px;
+    position:relative;
+  }
+  .ritual-eye-wrap::before{
+    content:"";
+    position:absolute;
+    inset:18% 12% 14%;
+    border-radius:50%;
+    background:radial-gradient(circle at 50% 50%, rgba(124,92,255,.18), rgba(124,92,255,0) 68%);
+    filter:blur(14px);
+    pointer-events:none;
+  }
+  .ritual-eye-svg{
+    width:100%;
+    display:block;
+    overflow:visible;
+  }
+  .ritual-eye-iris{
+    transform-origin:110px 65px;
+    animation:ritualIrisBreathe 3.2s ease-in-out infinite;
+  }
+  .ritual-lid-top,
+  .ritual-lid-bottom{
+    transform-origin:110px 65px;
+    animation:ritualBlink 4.6s ease-in-out infinite;
+  }
+  @keyframes ritualIrisBreathe{
+    0%,100%{transform:scale(1)}
+    50%{transform:scale(1.08)}
+  }
+  @keyframes ritualBlink{
+    0%, 40%, 100%{opacity:1}
+    44%, 48%{opacity:.55}
+    46%{opacity:.18}
+  }
+  #preludePanel .ritual-copy{
+    max-width:21ch !important;
+    margin:0 auto 10px !important;
+    min-height:60px !important;
+    text-align:center !important;
+  }
+  #preludePanel .tiny{
+    max-width:18ch !important;
+    margin:0 auto !important;
+    text-align:center !important;
+  }
+
+  /* flip page card name a bit lower */
+  #cardStage .card-art{
+    margin:6px auto 20px !important;
+  }
+  #cardStage .card-name{
+    margin-top:10px !important;
+  }
+
+  /* remove direction / best window from result page only */
+  #resultStage .oracle-sign-meta{
+    display:none !important;
+  }
+  #resultStage .oracle-sign-omen{
+    margin-bottom:0 !important;
+    min-height:228px !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+  }
+  #resultStage .result-actions{
+    margin-top:18px !important;
+  }
+
+  @media (max-width:420px){
+    .contextual-input.show{
+      max-height:110px !important;
+      margin-top:9px !important;
+    }
+    #preludePanel{
+      width:min(390px, 92vw) !important;
+      padding:16px 8px 12px !important;
+    }
+    .ritual-eye-wrap{
+      width:126px;
+      margin-bottom:10px;
+    }
+    #preludePanel .ritual-copy{
+      max-width:19.5ch !important;
+      min-height:56px !important;
+    }
+    #cardStage .card-art{
+      margin-bottom:18px !important;
+    }
+    #resultStage .oracle-sign-omen{
+      min-height:208px !important;
+    }
+    #resultStage .result-actions{
+      margin-top:16px !important;
+    }
+  }
+</style>
+
 </head>
 <body>
 <!-- cleaned flow version: unused overlays and superseded style patches removed -->
@@ -3631,8 +3792,17 @@
       <div class="absorb-notice" id="absorbNotice"><span>Received. What felt heavy is becoming your next sign.</span></div>
 
       <div id="preludePanel" class="panel">
+        <div class="ritual-eye-wrap" aria-hidden="true">
+          <svg class="ritual-eye-svg" viewBox="0 0 220 130" xmlns="http://www.w3.org/2000/svg">
+            <path class="ritual-eye-outline" d="M20 65 Q63 22 110 22 Q157 22 200 65 Q157 108 110 108 Q63 108 20 65Z" fill="none" stroke="rgba(232,207,151,.42)" stroke-width="2"/>
+            <circle class="ritual-eye-iris" cx="110" cy="65" r="22" fill="rgba(151,119,255,.34)" stroke="rgba(245,241,232,.42)" stroke-width="1.5"/>
+            <circle class="ritual-eye-pupil" cx="110" cy="65" r="10" fill="rgba(26,20,43,.82)"/>
+            <path class="ritual-lid-top" d="M20 65 Q63 22 110 22 Q157 22 200 65" fill="none" stroke="rgba(232,207,151,.26)" stroke-width="7" stroke-linecap="round"/>
+            <path class="ritual-lid-bottom" d="M20 65 Q63 108 110 108 Q157 108 200 65" fill="none" stroke="rgba(232,207,151,.18)" stroke-width="7" stroke-linecap="round"/>
+          </svg>
+        </div>
         <div class="ritual-copy" id="preludeCopy"></div>
-        <div class="tiny prelude-tiny">One slow breath is enough.</div>
+        <div class="tiny prelude-tiny">Breathe in. Breathe out.</div>
       </div>
     </section>
 
@@ -3717,8 +3887,8 @@
   <div class="overlay-card glass">
     <div class="overlay-title" style="font-size:24px">The Eye is full for today</div>
     <p class="overlay-text">
-      Come back tomorrow.
-      I’ll be ready to take in more.
+      The Eye has had its fill of heavy energy for today.
+      Come back tomorrow, and it will be ready to take in more.
     </p>
     <p class="overlay-small" id="returnDateText"></p>
   </div>
@@ -3727,7 +3897,7 @@
 <script>
 (() => {
   const STORAGE_KEY = 'guardian_eye_v2';
-  const TEST_MODE = true; // set to false for live first-use activation + daily limit behavior
+  const TEST_MODE = false; // live daily-limit behavior enabled
   const todayKey = () => new Date().toISOString().slice(0,10);
 
 
@@ -4464,7 +4634,7 @@
     if(skipPreludeBtn){
       skipPreludeBtn.addEventListener('click', () => {
         if(preludeAutoTimer){ clearTimeout(preludeAutoTimer); preludeAutoTimer = null; }
-        breatheAndReveal(520);
+        breatheAndReveal(920);
       });
     }
 
@@ -4475,7 +4645,7 @@
     if(saveImageBtn) saveImageBtn.addEventListener('click', saveReadingImage);
 
     const backHomeBtn = $('backHomeBtn');
-    if(backHomeBtn) backHomeBtn.addEventListener('click', () => resetToHome(false));
+    if(backHomeBtn) backHomeBtn.addEventListener('click', () => { try{ window.scrollTo({top:0,left:0,behavior:'auto'}); }catch(err){ window.scrollTo(0,0); } resetToHome(false); });
 
     const musicBtn = $('musicBtn');
     if(musicBtn) musicBtn.addEventListener('click', toggleMusic);
@@ -4562,9 +4732,9 @@
 
     preludeAutoTimer = setTimeout(() => {
       if($('preludePanel').classList.contains('active')){
-        breatheAndReveal(520);
+        breatheAndReveal(920);
       }
-    }, 2200);
+    }, 2800);
   }
 
   function breatheAndReveal(delay){
@@ -5076,7 +5246,11 @@
       setTimeout(()=>URL.revokeObjectURL(url), 8000);
     }catch(err){
       console.error('Save sign failed:', err);
-      alert('Could not save the sign on this browser. Please try Safari or Chrome on your phone.');
+      if(err && (err.name === 'AbortError' || err.name === 'NotAllowedError')) return;
+      const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || '');
+      if(!isMobile){
+        alert('Could not save the sign on this browser. Please try Safari or Chrome on your phone.');
+      }
     }
   }
 
@@ -5302,6 +5476,8 @@
 
   function resetToHome(alreadyRead){
     if(preludeAutoTimer){ clearTimeout(preludeAutoTimer); preludeAutoTimer = null; }
+    try{ window.scrollTo({top:0, left:0, behavior:'auto'}); }catch(err){ window.scrollTo(0,0); }
+    if(document.scrollingElement) document.scrollingElement.scrollTop = 0;
     const heroHome = document.querySelector('.hero-home');
     if(heroHome){
       heroHome.classList.remove('stage-hidden');
